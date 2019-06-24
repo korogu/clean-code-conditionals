@@ -52,6 +52,7 @@ export class App extends React.Component<any, State> {
         return (
             <div>
                 <header>
+                    <img className="app-icon" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/svg/1f3be.svg"></img>
                     <p>Now playing</p>
                     <p>{this.state.playerOneName} vs. {this.state.playerTwoName}</p>
                 </header>
