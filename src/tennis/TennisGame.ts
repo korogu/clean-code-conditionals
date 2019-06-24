@@ -41,12 +41,12 @@ export class TennisGame {
 
         if (this.playerOneScore === this.playerTwoScore) {
             // Find regular equality
-            return (displayNumericScore ? this.translateScoreToNumeric(this.playerOneScore) : this.translateScoreToAlpha(this.playerOneScore)) + ' all';
+            return this.getPlayerScore(this.playerOneScore, displayNumericScore) + ' all';
         }
 
         // Regular score
-        return (displayNumericScore ? this.translateScoreToNumeric(this.playerOneScore) : this.translateScoreToAlpha(this.playerOneScore))
-            + ',' + (displayNumericScore ? this.translateScoreToNumeric(this.playerTwoScore) : this.translateScoreToAlpha(this.playerTwoScore));
+        return this.getPlayerScore(this.playerOneScore, displayNumericScore) + ','
+            + this.getPlayerScore(this.playerTwoScore, displayNumericScore);
 
     }
 
@@ -66,6 +66,10 @@ export class TennisGame {
 
     private hasDeuce() {
         return this.playerOneScore >= 3 && this.playerTwoScore === this.playerOneScore;
+    }
+
+    private getPlayerScore(playerScore:number, displayNumericScore: boolean):string {
+        return displayNumericScore ? this.translateScoreToNumeric(playerScore) : this.translateScoreToAlpha(playerScore);
     }
 
     private translateScoreToAlpha(score: number): string {
