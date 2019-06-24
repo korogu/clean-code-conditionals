@@ -29,7 +29,7 @@ export class TennisGame {
 
         // Find a winner
         if (this.isGameFinished()) {
-            return this.getWinnerName() + ' wins';
+            return this.getBestPlayerName() + ' wins';
         }
 
         // Find advantage
@@ -54,25 +54,8 @@ export class TennisGame {
     }
 
     private isGameFinished(): boolean {
-        return (this.hasPlayerOneWon() || this.hasPlayerTwoWon());
-    }
-
-    private hasPlayerOneWon() {
-        return this.playerOneScore >= 4 && this.playerOneScore >= this.playerTwoScore + 2;
-    }
-
-    private hasPlayerTwoWon() {
-        return this.playerTwoScore >= 4 && this.playerTwoScore >= this.playerOneScore + 2;
-    }
-
-    private getWinnerName(): string | undefined {
-        if (this.hasPlayerOneWon()) {
-            return this._playerOneName;
-        }
-
-        if (this.hasPlayerTwoWon()) {
-            return this._playerTwoName;
-        }
+        return (this.playerOneScore >= 4 && this.playerOneScore >= this.playerTwoScore + 2)
+            || (this.playerTwoScore >= 4 && this.playerTwoScore >= this.playerOneScore + 2);
     }
 
     private hasAdvantage() {
