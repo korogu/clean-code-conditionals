@@ -27,36 +27,35 @@ export class TennisGame {
 
     public getScore(displayNumericScore: boolean = false): string {
 
-        let score: string | null = null;
-
         // Find a winner
         if (this.playerTwoScore >= 4 && this.playerTwoScore >= this.playerOneScore + 2) {
-            score = this._playerTwoName + ' wins';
-        } else if (this.playerOneScore >= 4 && this.playerOneScore >= this.playerTwoScore + 2) {
-            score = this._playerOneName + ' wins';
+            return this._playerTwoName + ' wins';
+        }
+
+        if (this.playerOneScore >= 4 && this.playerOneScore >= this.playerTwoScore + 2) {
+            return this._playerOneName + ' wins';
         }
 
         // Find advantage
         if ((this.playerTwoScore >= 4 && this.playerTwoScore === this.playerOneScore + 1)
             || (this.playerOneScore >= 4 && this.playerOneScore === this.playerTwoScore + 1)) {
-            score = 'Advantage ' + ((this.playerOneScore > this.playerTwoScore) ? this._playerOneName : this._playerTwoName);
+            return 'Advantage ' + ((this.playerOneScore > this.playerTwoScore) ? this._playerOneName : this._playerTwoName);
         }
 
         // Find deuce
         if (this.playerOneScore >= 3 && this.playerTwoScore === this.playerOneScore) {
-            score = 'Deuce';
-        } else if (this.playerOneScore === this.playerTwoScore) {
+            return 'Deuce';
+        }
+
+        if (this.playerOneScore === this.playerTwoScore) {
             // Find regular equality
-            score = (displayNumericScore ? this.translateScoreToNumeric(this.playerOneScore) : this.translateScoreToAlpha(this.playerOneScore)) + ' all';
+            return (displayNumericScore ? this.translateScoreToNumeric(this.playerOneScore) : this.translateScoreToAlpha(this.playerOneScore)) + ' all';
         }
 
         // Regular score
-        if (score == null) {
-            score = (displayNumericScore ? this.translateScoreToNumeric(this.playerOneScore) : this.translateScoreToAlpha(this.playerOneScore))
-                + ',' + (displayNumericScore ? this.translateScoreToNumeric(this.playerTwoScore) : this.translateScoreToAlpha(this.playerTwoScore));
-        }
+        return (displayNumericScore ? this.translateScoreToNumeric(this.playerOneScore) : this.translateScoreToAlpha(this.playerOneScore))
+            + ',' + (displayNumericScore ? this.translateScoreToNumeric(this.playerTwoScore) : this.translateScoreToAlpha(this.playerTwoScore));
 
-        return score;
     }
 
     private translateScoreToAlpha(score: number): string {
