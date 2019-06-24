@@ -27,18 +27,15 @@ export class TennisGame {
 
     public getScore(displayNumericScore: boolean = false): string {
 
-        // Find a winner
         if (this.isGameFinished()) {
             return this.getBestPlayerName() + ' wins';
         }
 
-        // Find advantage
         if (this.hasAdvantage()) {
             return 'Advantage ' + this.getBestPlayerName();
         }
 
-        // Find deuce
-        if (this.playerOneScore >= 3 && this.playerTwoScore === this.playerOneScore) {
+        if (this.hasDeuce()) {
             return 'Deuce';
         }
 
@@ -65,6 +62,10 @@ export class TennisGame {
 
     private getBestPlayerName() {
         return ((this.playerOneScore > this.playerTwoScore) ? this._playerOneName : this._playerTwoName);
+    }
+
+    private hasDeuce() {
+        return this.playerOneScore >= 3 && this.playerTwoScore === this.playerOneScore;
     }
 
     private translateScoreToAlpha(score: number): string {
