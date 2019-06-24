@@ -33,9 +33,8 @@ export class TennisGame {
         }
 
         // Find advantage
-        if ((this.playerTwoScore >= 4 && this.playerTwoScore === this.playerOneScore + 1)
-            || (this.playerOneScore >= 4 && this.playerOneScore === this.playerTwoScore + 1)) {
-            return 'Advantage ' + ((this.playerOneScore > this.playerTwoScore) ? this._playerOneName : this._playerTwoName);
+        if (this.hasAdvantage()) {
+            return 'Advantage ' + this.getBestPlayerName();
         }
 
         // Find deuce
@@ -74,6 +73,15 @@ export class TennisGame {
         if (this.hasPlayerTwoWon()) {
             return this._playerTwoName;
         }
+    }
+
+    private hasAdvantage() {
+        return (this.playerTwoScore >= 4 && this.playerTwoScore === this.playerOneScore + 1)
+            || (this.playerOneScore >= 4 && this.playerOneScore === this.playerTwoScore + 1);
+    }
+
+    private getBestPlayerName() {
+        return ((this.playerOneScore > this.playerTwoScore) ? this._playerOneName : this._playerTwoName);
     }
 
     private translateScoreToAlpha(score: number): string {
