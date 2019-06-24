@@ -18,6 +18,10 @@ button {
   border-radius: 0.4em;
 }
 
+.app-icon {
+ width: 4em;
+}
+
 .action-menu {
   padding: 0;
 
