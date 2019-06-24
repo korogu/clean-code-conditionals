@@ -1,26 +1,77 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {TennisGame} from "./tennis/TennisGame";
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+type State = {
+    playerOneName: string;
+    playerTwoName: string;
+    score: string;
 }
 
-export default App;
+export class App extends React.Component<any, State> {
+
+    private tennisGame: TennisGame;
+
+    constructor(props: any) {
+        super(props);
+
+        this.tennisGame = new TennisGame('rafa', 'roger');
+
+        this.state = {
+            playerOneName: this.tennisGame.playerOneName,
+            playerTwoName: this.tennisGame.playerTwoName,
+            score: this.tennisGame.getScore()
+        };
+
+        this.playerOneScores = this.playerOneScores.bind(this);
+        this.playerTwoScores = this.playerTwoScores.bind(this);
+        this.resetGame = this.resetGame.bind(this);
+    }
+
+    playerOneScores(): void {
+        this.tennisGame.playerOneScores();
+        this.updateScore();
+    }
+
+    playerTwoScores(): void {
+        this.tennisGame.playerTwoScores();
+        this.updateScore();
+    }
+
+    resetGame():void {
+        this.tennisGame = new TennisGame('rafa', 'roger');
+        this.updateScore();
+    }
+
+    updateScore(): void {
+        this.setState({score: this.tennisGame.getScore()});
+    }
+
+    render() {
+        return (
+            <div>
+                <header>
+                    <p>Now playing</p>
+                    <p>{this.state.playerOneName} vs. {this.state.playerTwoName}</p>
+                </header>
+                <section>
+                    <p>
+                        {this.state.score}
+                    </p>
+                    <ol className="action-menu">
+                        <li>
+                            <button onClick={this.playerOneScores}>Player 1 scores</button>
+                        </li>
+                        <li>
+                            <button onClick={this.playerTwoScores}>Player 2 scores</button>
+                        </li>
+                        <li>
+                            <button onClick={this.resetGame}>Reset</button>
+                        </li>
+                    </ol>
+                </section>
+            </div>
+        );
+    }
+}
