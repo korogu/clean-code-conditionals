@@ -55,16 +55,23 @@ export class TennisGame {
     }
 
     private isGameFinished(): boolean {
-        return (this.playerTwoScore >= 4 && this.playerTwoScore >= this.playerOneScore + 2)
-            || (this.playerOneScore >= 4 && this.playerOneScore >= this.playerTwoScore + 2);
+        return (this.hasPlayerOneWon() || this.hasPlayerTwoWon());
+    }
+
+    private hasPlayerOneWon() {
+        return this.playerOneScore >= 4 && this.playerOneScore >= this.playerTwoScore + 2;
+    }
+
+    private hasPlayerTwoWon() {
+        return this.playerTwoScore >= 4 && this.playerTwoScore >= this.playerOneScore + 2;
     }
 
     private getWinnerName(): string | undefined {
-        if (this.playerOneScore >= 4 && this.playerOneScore >= this.playerTwoScore + 2) {
+        if (this.hasPlayerOneWon()) {
             return this._playerOneName;
         }
 
-        if (this.playerTwoScore >= 4 && this.playerTwoScore >= this.playerOneScore + 2) {
+        if (this.hasPlayerTwoWon()) {
             return this._playerTwoName;
         }
     }
