@@ -1,3 +1,42 @@
+interface ScorePrinter {
+    printScore(score: number): string;
+}
+
+class PlainTextScorePrinter implements ScorePrinter {
+    printScore(score: number): string {
+        switch (score) {
+            case 3:
+                return 'Forty';
+            case 2:
+                return 'Thirty';
+            case 1:
+                return 'Fifteen';
+            case 0:
+                return 'Love';
+        }
+
+        throw new Error('bad score');
+    }
+
+}
+
+class NumericScorePrinter implements ScorePrinter {
+    printScore(score: number): string {
+        switch (score) {
+            case 3:
+                return '40';
+            case 2:
+                return '30';
+            case 1:
+                return '15';
+            case 0:
+                return '0';
+        }
+
+        throw new Error('bad score');
+    }
+}
+
 export class TennisGame {
     playerOneScore = 0;
     playerTwoScore = 0;
@@ -39,14 +78,16 @@ export class TennisGame {
             return 'Deuce';
         }
 
+        const scorePrinter: ScorePrinter = displayNumericScore ? new NumericScorePrinter() : new PlainTextScorePrinter();
+
         if (this.playerOneScore === this.playerTwoScore) {
             // Find regular equality
-            return this.getPlayerScore(this.playerOneScore, displayNumericScore) + ' all';
+            return scorePrinter.printScore(this.playerOneScore) + ' all';
         }
 
+
         // Regular score
-        return this.getPlayerScore(this.playerOneScore, displayNumericScore) + ','
-            + this.getPlayerScore(this.playerTwoScore, displayNumericScore);
+        return scorePrinter.printScore(this.playerOneScore) + ','  + scorePrinter.printScore(this.playerTwoScore);
 
     }
 
@@ -66,39 +107,5 @@ export class TennisGame {
 
     private hasDeuce() {
         return this.playerOneScore >= 3 && this.playerTwoScore === this.playerOneScore;
-    }
-
-    private getPlayerScore(playerScore:number, displayNumericScore: boolean):string {
-        return displayNumericScore ? this.translateScoreToNumeric(playerScore) : this.translateScoreToAlpha(playerScore);
-    }
-
-    private translateScoreToAlpha(score: number): string {
-        switch (score) {
-            case 3:
-                return 'Forty';
-            case 2:
-                return 'Thirty';
-            case 1:
-                return 'Fifteen';
-            case 0:
-                return 'Love';
-        }
-
-        throw new Error('bad score');
-    }
-
-    private translateScoreToNumeric(score: number): string {
-        switch (score) {
-            case 3:
-                return '40';
-            case 2:
-                return '30';
-            case 1:
-                return '15';
-            case 0:
-                return '0';
-        }
-
-        throw new Error('bad score');
     }
 }

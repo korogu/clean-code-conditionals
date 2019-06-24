@@ -18,7 +18,7 @@ it('Get the initial score', () => {
   expect(tennisGame.getScore()).toBe('Love all');
 });
 
-it('Display player points after player scores', () => {
+it('Display player 1 points after player scores', () => {
   expect(tennisGame.getScore()).toBe('Love all');
 
   tennisGame.playerOneScores();
@@ -29,6 +29,19 @@ it('Display player points after player scores', () => {
 
   tennisGame.playerOneScores();
   expect(tennisGame.getScore()).toBe('Forty,Love');
+});
+
+it('Display player points with number', () => {
+  expect(tennisGame.getScore(true)).toBe('0 all');
+
+  tennisGame.playerOneScores();
+  expect(tennisGame.getScore(true)).toBe('15,0');
+
+  tennisGame.playerOneScores();
+  expect(tennisGame.getScore(true)).toBe('30,0');
+
+  tennisGame.playerOneScores();
+  expect(tennisGame.getScore(true)).toBe('40,0');
 });
 
 it('Update player 2 points after player scores', () => {
