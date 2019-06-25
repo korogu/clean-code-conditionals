@@ -1,47 +1,81 @@
 interface ScorePrinter {
-    printScore(score: number): string;
+    printScore(score: TennisScore): string;
 }
 
 class PlainTextScorePrinter implements ScorePrinter {
-    printScore(score: number): string {
-        switch (score) {
-            case 3:
-                return 'Forty';
-            case 2:
-                return 'Thirty';
-            case 1:
-                return 'Fifteen';
-            case 0:
-                return 'Love';
-        }
-
-        throw new Error('bad score');
+    printScore(score: TennisScore): string {
+        return score.label;
     }
-
 }
 
 class NumericScorePrinter implements ScorePrinter {
-    printScore(score: number): string {
-        switch (score) {
-            case 3:
-                return '40';
-            case 2:
-                return '30';
-            case 1:
-                return '15';
-            case 0:
-                return '0';
-        }
+    printScore(score: TennisScore): string {
+        return score.points.toString();
+    }
+}
 
-        throw new Error('bad score');
+class TennisScore {
+    private readonly _balls: number;
+    private readonly _points: number;
+    private readonly _label: string;
+
+    public static readonly SCORE_0 = new TennisScore(0, 0, 'Love');
+    public static readonly SCORE_15 = new TennisScore(1, 15, 'Fifteen');
+    public static readonly SCORE_30 = new TennisScore(2, 30, 'Thirty');
+    public static readonly SCORE_40 = new TennisScore(3, 40, 'Forty');
+
+    constructor(balls: number, points: number, label: string) {
+        this._balls = balls;
+        this._points = points;
+        this._label = label;
+    }
+
+    get balls(): number {
+        return this._balls;
+    }
+
+    get points(): number {
+        return this._points;
+    }
+
+    get label(): string {
+        return this._label;
+    }
+
+    isBetter(score: TennisScore): boolean {
+        return this._balls > score.balls;
+    }
+
+    nextBall() {
+        if (this === TennisScore.SCORE_0) {
+            return TennisScore.SCORE_15;
+        } else if (this === TennisScore.SCORE_15) {
+            return TennisScore.SCORE_30;
+        } else if (this === TennisScore.SCORE_30) {
+            return TennisScore.SCORE_40;
+        } else {
+            const nextBall = this._balls + 1;
+            return new TennisScore(nextBall, nextBall, nextBall.toString());
+        }
+    }
+
+    isForward(otherScore: TennisScore) {
+        return {
+            by: (delta: number) => this.balls >= otherScore.balls + delta
+
+        };
+    }
+
+    isEqual(otherScore: TennisScore) {
+        return otherScore.balls === this._balls;
     }
 }
 
 export class TennisGame {
-    playerOneScore = 0;
-    playerTwoScore = 0;
-    _playerTwoName: string;
-    _playerOneName: string;
+    private playerOneScore = TennisScore.SCORE_0;
+    private playerTwoScore = TennisScore.SCORE_0;
+    private readonly _playerTwoName: string;
+    private readonly _playerOneName: string;
 
     constructor(playerOneName: string, playerTwoName: string) {
         this._playerOneName = playerOneName;
@@ -49,11 +83,11 @@ export class TennisGame {
     }
 
     public playerOneScores(): void {
-        this.playerOneScore++;
+        this.playerOneScore = this.playerOneScore.nextBall();
     }
 
     public playerTwoScores(): void {
-        this.playerTwoScore++;
+        this.playerTwoScore = this.playerTwoScore.nextBall();
     }
 
     public get playerTwoName() {
@@ -87,25 +121,25 @@ export class TennisGame {
 
 
         // Regular score
-        return scorePrinter.printScore(this.playerOneScore) + ','  + scorePrinter.printScore(this.playerTwoScore);
+        return scorePrinter.printScore(this.playerOneScore) + ',' + scorePrinter.printScore(this.playerTwoScore);
 
     }
 
     private isGameFinished(): boolean {
-        return (this.playerOneScore >= 4 && this.playerOneScore >= this.playerTwoScore + 2)
-            || (this.playerTwoScore >= 4 && this.playerTwoScore >= this.playerOneScore + 2);
+        return (this.playerOneScore.isBetter(TennisScore.SCORE_40) && this.playerOneScore.isForward(this.playerTwoScore).by(2))
+            || (this.playerTwoScore.isBetter(TennisScore.SCORE_40) && this.playerTwoScore.isForward(this.playerOneScore).by(2));
     }
 
     private hasAdvantage() {
-        return (this.playerTwoScore >= 4 && this.playerTwoScore === this.playerOneScore + 1)
-            || (this.playerOneScore >= 4 && this.playerOneScore === this.playerTwoScore + 1);
+        return (this.playerTwoScore.isBetter(TennisScore.SCORE_40) && this.playerTwoScore.isForward(this.playerOneScore).by(1))
+            || (this.playerOneScore.isBetter(TennisScore.SCORE_40) && this.playerOneScore.isForward(this.playerTwoScore).by(1));
     }
 
     private getBestPlayerName() {
-        return ((this.playerOneScore > this.playerTwoScore) ? this._playerOneName : this._playerTwoName);
+        return (this.playerOneScore.isBetter(this.playerTwoScore) ? this._playerOneName : this._playerTwoName);
     }
 
     private hasDeuce() {
-        return this.playerOneScore >= 3 && this.playerTwoScore === this.playerOneScore;
+        return this.playerOneScore.isBetter(TennisScore.SCORE_30) && this.playerTwoScore.isEqual(this.playerOneScore);
     }
 }
