@@ -4,7 +4,7 @@ A base code to demonstrate clean code practices related to conditional expressio
 - **advanced-solution** branch: another possible solution, more advanced
 
 # Instructions
-Checkout the **master** branch and try to remove bad code smells using refactoring techniques.
+Checkout the **master** branch and try to remove bad code smells in _src/tennis/_ folder using refactoring techniques.
 When finished, look at solution in the other branches.
 
 
